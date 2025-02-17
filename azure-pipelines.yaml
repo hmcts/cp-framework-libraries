@@ -32,7 +32,7 @@ stages:
         steps:
           - checkout: self
           - checkout: travisSettings
-            path: $(Agent.RootDirectory)/target/travis-settings
+            path: target/travis-settings
             fetchDepth: 3
           # TODO: Setup PGSQL databases
           - task: bash@3
@@ -56,9 +56,9 @@ stages:
                 echo Homedir: $(Agent.HomeDirectory)
                 ls -al
                 mkdir -p $(Agent.HomeDirectory)/.m2/
-                ln -sfT $(Agent.RootDirectory)/target/travis-settings/settings.xml $(Agent.HomeDirectory)/.m2/settings.xml
-                ln -sfT $(Agent.RootDirectory)/target/travis-settings/mvnw mvnw
-                ln -sft $(Agent.RootDirectory) $(Agent.RootDirectory)/target/travis-settings/.mvn
+                ln -sfT target/travis-settings/settings.xml $(Agent.HomeDirectory)/.m2/settings.xml
+                ln -sfT target/travis-settings/mvnw mvnw
+                ln -sft $(pwd) target/travis-settings/.mvn
           - task: bash@3
             displayName: 'Install'
             inputs:
