@@ -10,8 +10,8 @@ resources:
   repositories:
     - repository: travisSettings
       type: github
-      name: CJSCommonPlatform/travis-settings
-      endpoint: 'CJSCommonPlatform'
+      name: hmcts/cjs-travis-settings
+      endpoint: 'hmcts'
       ref: 'master'
 
 pool:
