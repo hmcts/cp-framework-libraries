@@ -23,7 +23,7 @@ variables:
   sonarqubeProject: 'uk.gov.moj.platform.libraries:cjs-framework-libraries'
 
 stages:
-  - stage: Build & Publish
+  - stage: Build and Publish
     jobs:
       - job: BuildAndPublish
         variables:
