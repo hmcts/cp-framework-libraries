@@ -6,40 +6,73 @@ trigger: none
 pr:
   - '*'
 
-parameters:
-  - name: RUN_RELEASE
-    type: boolean
-    default: false
-
 resources:
   repositories:
-    - repository: cppAzureDevOpsTemplates
+    - repository: travisSettings
       type: github
-      name: hmcts/cpp-azure-devops-templates
-      endpoint: 'hmcts'
-      ref: 'main'
+      name: CJSCommonPlatform/travis-settings
+      endpoint: 'CJSCommonPlatform'
+      ref: 'master'
 
 pool:
-  name: "MDV-ADO-AGENT-AKS-01"
+  name: 'MDV-ADO-AGENT-AKS-01'
   demands:
     - identifier -equals centos8-j17
 
 variables:
-  sonarqubeProject: "uk.gov.moj.platform.libraries:cjs-framework-libraries"
+  sonarqubeProject: 'uk.gov.moj.platform.libraries:cjs-framework-libraries'
 
 stages:
-  - ${{ if and(eq(variables['Build.Repository.Name'], 'hmcts/cjs-framework-libraries'), eq(variables['Build.Reason'], 'PullRequest')) }}:
-      - template: pipelines/context-verify.yaml@cppAzureDevOpsTemplates
-        parameters:
-          sonarqube_project: ${{ variables['sonarqubeProject'] }}
-          sonarQubeType: 'sonarQubeAKS'
-      
-  - ${{ if and(ne(variables['Build.Repository.Name'], 'cjs-framework-libraries'), eq(variables['Build.Reason'], 'PullRequest')) }}:
-      - template: pipelines/platform-verify.yaml@cppAzureDevOpsTemplates
- 
-  - ${{ if eq(variables['Build.Reason'], 'Manual') }}:
-      - template: pipelines/library-validation.yaml@cppAzureDevOpsTemplates
-        parameters:  
-          serviceName: 'platformlibraries'
-          RUN_RELEASE: ${{ parameters.RUN_RELEASE }}
-          JOB_TYPE: 'library'
+  - stage: Build & Publish
+    jobs:
+      - job: BuildAndPublish
+        variables:
+          JAVA_TOOL_OPTIONS: '-Dhttps.protocols=TLSv1.2,TLSv1,TLSv1.1'
+          PGPORT: 5432
+        steps:
+          - checkout: self
+          - checkout: travisSettings
+            path: $(Agent.RootDirectory)/target/travis-settings
+            fetchDepth: 3
+          # TODO: Setup PGSQL databases
+          - task: bash@3
+            displayName: 'Create Postgres Databases'
+            inputs:
+              failOnStderr: false
+              targetType: 'inline'
+              script: |
+                #!/bin/bash
+                echo ToDo
+          - task: bash@3
+            displayName: 'Pre-Install'
+            inputs:
+              failOnStderr: false
+              targetType: 'inline'
+              script: |
+                #!/bin/bash
+                # Symlink cloned travis settings to relevant paths
+                echo pwd: $(pwd)
+                echo Agentdir: $(Agent.RootDirectory)
+                echo Homedir: $(Agent.HomeDirectory)
+                ls -al
+                mkdir -p $(Agent.HomeDirectory)/.m2/
+                ln -sfT $(Agent.RootDirectory)/target/travis-settings/settings.xml $(Agent.HomeDirectory)/.m2/settings.xml
+                ln -sfT $(Agent.RootDirectory)/target/travis-settings/mvnw mvnw
+                ln -sft $(Agent.RootDirectory) $(Agent.RootDirectory)/target/travis-settings/.mvn
+          - task: bash@3
+            displayName: 'Install'
+            inputs:
+              targetType: 'filePath'
+              filePath: '$(Agent.RootDirectory)/target/travis-settings/java/install.sh'
+              arguments: '-e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services'
+          - task: bash@3
+            displayName: 'Script'
+            inputs:
+              targetType: 'filePath'
+              filePath: '$(Agent.RootDirectory)/target/travis-settings/java/script-install.sh'
+              arguments: 'coveralls:report sonar:sonar'
+          - task: bash@3
+            displayName: 'After Success'
+            inputs:
+              targetType: 'filePath'
+              filePath: '$(Agent.RootDirectory)/target/travis-settings/java/after_success.sh'
