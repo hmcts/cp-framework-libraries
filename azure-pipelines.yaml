@@ -53,6 +53,7 @@ stages:
                 # Symlink cloned travis settings to relevant paths
                 echo pwd: $(pwd)
                 echo Agentdir: $(Agent.RootDirectory)
+                echo Workspace: $(Pipeline.Workspace)
                 echo Homedir: $(Agent.HomeDirectory)
                 ls -al
                 mkdir -p $(Agent.HomeDirectory)/.m2/
@@ -63,16 +64,16 @@ stages:
             displayName: 'Install'
             inputs:
               targetType: 'filePath'
-              filePath: '$(Agent.RootDirectory)/target/travis-settings/java/install.sh'
+              filePath: '$(Pipeline.Workspace)/target/travis-settings/java/install.sh'
               arguments: '-e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services'
           - task: bash@3
             displayName: 'Script'
             inputs:
               targetType: 'filePath'
-              filePath: '$(Agent.RootDirectory)/target/travis-settings/java/script-install.sh'
+              filePath: '$(Pipeline.Workspace)/target/travis-settings/java/script-install.sh'
               arguments: 'coveralls:report sonar:sonar'
           - task: bash@3
             displayName: 'After Success'
             inputs:
               targetType: 'filePath'
-              filePath: '$(Agent.RootDirectory)/target/travis-settings/java/after_success.sh'
+              filePath: '$(Pipeline.Workspace)/target/travis-settings/java/after_success.sh'
