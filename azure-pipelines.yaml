@@ -33,7 +33,7 @@ stages:
           - checkout: self
             path: s
           - checkout: travisSettings
-            path: target/travis-settings
+            path: s/target/travis-settings
             fetchDepth: 3
           # TODO: Setup PGSQL databases
           - task: bash@3
