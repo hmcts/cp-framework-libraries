@@ -65,16 +65,16 @@ stages:
             displayName: 'Install'
             inputs:
               targetType: 'filePath'
-              filePath: '$(Pipeline.Workspace)/target/travis-settings/java/install.sh'
+              filePath: 'target/travis-settings/java/install.sh'
               arguments: '-e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services'
           - task: bash@3
             displayName: 'Script'
             inputs:
               targetType: 'filePath'
-              filePath: '$(Pipeline.Workspace)/target/travis-settings/java/script-install.sh'
+              filePath: 'target/travis-settings/java/script-install.sh'
               arguments: 'coveralls:report sonar:sonar'
           - task: bash@3
             displayName: 'After Success'
             inputs:
               targetType: 'filePath'
-              filePath: '$(Pipeline.Workspace)/target/travis-settings/java/after_success.sh'
+              filePath: 'target/travis-settings/java/after_success.sh'
