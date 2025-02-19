@@ -31,7 +31,7 @@ stages:
           PGPORT: 5432
         steps:
           - checkout: self
-            path: $(pwd)
+            path: s
           - checkout: travisSettings
             path: target/travis-settings
             fetchDepth: 3
