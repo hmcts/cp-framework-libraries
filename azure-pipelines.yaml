@@ -43,6 +43,8 @@ stages:
               targetType: 'inline'
               script: |
                 #!/bin/bash
+                which psql
+                psql -V
                 psql -c 'create database frameworkeventstore;' -U postgres
                 psql -c 'create database frameworkviewstore;' -U postgres
                 psql -c 'create database frameworkfilestore;' -U postgres
