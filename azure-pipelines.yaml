@@ -21,6 +21,7 @@ pool:
 
 variables:
   sonarqubeProject: 'uk.gov.moj.platform.libraries:cjs-framework-libraries'
+  CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
 
 stages:
   - stage: BuildAndPublish
