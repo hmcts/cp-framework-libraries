@@ -47,7 +47,7 @@ stages:
           - task: bash@3
             displayName: 'Pre-Install'
             inputs:
-              failOnStderr: false
+              failOnStderr: true
               targetType: 'inline'
               script: |
                 #!/bin/bash
@@ -58,7 +58,7 @@ stages:
                 echo Homedir: $(Agent.HomeDirectory)
                 echo Default Workdir: $(System.DefaultWorkingDirectory)
                 echo Sourcedir: $(Build.SourcesDirectory)
-                mkdir -p $(Agent.HomeDirectory)/.m2/
+                mkdir -p ~/.m2/
                 cp target/travis-settings/settings.xml ~/.m2/settings.xml
                 cp target/travis-settings/mvnw ./mvnw
                 cp -r target/travis-settings/.mvn .
