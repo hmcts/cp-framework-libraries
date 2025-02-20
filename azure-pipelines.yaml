@@ -20,8 +20,7 @@ pool:
     - identifier -equals centos8-j17
 
 variables:
-  sonarqubeProject: 'uk.gov.moj.platform.libraries:cjs-framework-libraries'
-  CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
+  - group: "cjs-common-platform"
 
 stages:
   - stage: BuildAndPublish
@@ -70,6 +69,8 @@ stages:
               targetType: 'filePath'
               filePath: 'target/travis-settings/java/install.sh'
               arguments: '-e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services'
+            env:
+              CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
           - task: bash@3
             displayName: 'Script'
             inputs:
