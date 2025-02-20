@@ -58,11 +58,11 @@ stages:
                 echo Homedir: $(Agent.HomeDirectory)
                 echo Default Workdir: $(System.DefaultWorkingDirectory)
                 echo Sourcedir: $(Build.SourcesDirectory)
-                ls -al
                 mkdir -p $(Agent.HomeDirectory)/.m2/
-                ln -sfT target/travis-settings/settings.xml $(Agent.HomeDirectory)/.m2/settings.xml
-                ln -sfT target/travis-settings/mvnw mvnw
-                ln -sft $(pwd) target/travis-settings/.mvn
+                cp target/travis-settings/settings.xml ~/.m2/settings.xml
+                cp target/travis-settings/mvnw ./mvnw
+                cp -r target/travis-settings/.mvn .
+                ls -al
           - task: bash@3
             displayName: 'Install'
             inputs:
