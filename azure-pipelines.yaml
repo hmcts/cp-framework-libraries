@@ -1,4 +1,4 @@
-name: CPP Library Verify & Validation
+name: CJS Library Build & Publish
 
 # Need to update this for actual migration.
 trigger: none
