@@ -39,14 +39,14 @@ stages:
           - task: bash@3
             displayName: 'Create Postgres Databases'
             inputs:
-              failOnStderr: false
+              failOnStderr: true
               targetType: 'inline'
               script: |
                 #!/bin/bash
                 alias psql='/usr/postgresql-12/bin/psql'
                 psql -V
-                sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
-                sudo systemctl enable --now postgresql-12
+                /usr/pgsql-12/bin/postgresql-12-setup initdb
+                systemctl enable --now postgresql-12
                 psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkfilestore;' -U postgres
