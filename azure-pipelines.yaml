@@ -15,9 +15,7 @@ resources:
       ref: 'master'
 
 pool:
-  name: 'MDV-ADO-AGENT-AKS-01'
-  demands:
-    - identifier -equals centos8-j17
+  name: 'MDV-ADO-AGENTS-01'
 
 variables:
   - group: "cjs-common-platform"
