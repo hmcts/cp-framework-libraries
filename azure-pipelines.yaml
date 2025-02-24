@@ -43,12 +43,14 @@ stages:
               targetType: 'inline'
               script: |
                 #!/bin/bash
-                /usr/postgresql-12/bin/psql -V
-                /usr/postgresql-12/bin/psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
-                /usr/postgresql-12/bin/psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
-                /usr/postgresql-12/bin/psql -c 'CREATE DATABASE frameworkfilestore;' -U postgres
-                /usr/postgresql-12/bin/psql -c 'CREATE DATABASE frameworkjobstore;' -U postgres
-                p/usr/postgresql-12/bin/psqlsql -c "CREATE USER IF NOT EXISTS framework WITH PASSWORD 'framework';" -U postgres
+                alias psql='/usr/postgresql-12/bin/psql'
+                psql -V
+                which psql
+                psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
+                psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
+                psql -c 'CREATE DATABASE frameworkfilestore;' -U postgres
+                psql -c 'CREATE DATABASE frameworkjobstore;' -U postgres
+                psql -c "CREATE USER IF NOT EXISTS framework WITH PASSWORD 'framework';" -U postgres
           - task: bash@3
             displayName: 'Pre-Install'
             inputs:
