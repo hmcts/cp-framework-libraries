@@ -41,6 +41,8 @@ stages:
               targetType: 'inline'
               script: |
                 #!/bin/bash
+                id
+                cat /etc/postgresql/12/main/pg_hba.conf
                 alias psql='/usr/postgresql-12/bin/psql'
                 psql -V
                 psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
