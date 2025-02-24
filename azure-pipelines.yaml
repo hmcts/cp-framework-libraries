@@ -27,6 +27,8 @@ stages:
         variables:
           JAVA_TOOL_OPTIONS: '-Dhttps.protocols=TLSv1.2,TLSv1,TLSv1.1'
           PGPORT: 5432
+          PGHOST: 127.0.0.1
+          PGUSER: postgres
         steps:
           - checkout: self
             path: s
@@ -43,7 +45,7 @@ stages:
                 #!/bin/bash
                 alias psql='/usr/postgresql-12/bin/psql'
                 psql -V
-                psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres -h localhost -w
+                psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkfilestore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkjobstore;' -U postgres
