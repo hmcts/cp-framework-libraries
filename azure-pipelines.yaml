@@ -41,11 +41,10 @@ stages:
               targetType: 'inline'
               script: |
                 #!/bin/bash
-                psql -V
                 which psql
-                echo 'localhost:5432:*:postgres:' > ~/.pgpass
-                chmod 600 ~/.pgpass
-                psql -c 'CREATE DATABASE frameworkeventstore;' -w
+                ls -l /etc/postgresql/12/main/
+                psql -V
+                psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkfilestore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkjobstore;' -U postgres
