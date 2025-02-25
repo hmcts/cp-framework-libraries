@@ -41,16 +41,12 @@ stages:
               targetType: 'inline'
               script: |
                 #!/bin/bash
-                which psql
-                ls -l /etc/postgresql/12/main/
-                ls -l /var/lib/pgsql/12/data
-                ls -l /var/lib/pgsql/data
                 psql -V
                 psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkfilestore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkjobstore;' -U postgres
-                psql -c "CREATE USER IF NOT EXISTS framework WITH PASSWORD 'framework';" -U postgres
+                psql -c "CREATE USER framework WITH PASSWORD 'framework';" -U postgres
           - task: bash@3
             displayName: 'Pre-Install'
             inputs:
