@@ -43,6 +43,8 @@ stages:
                 #!/bin/bash
                 which psql
                 ls -l /etc/postgresql/12/main/
+                ls -l /var/lib/pgsql/12/data
+                ls -l /var/lib/pgsql/data
                 psql -V
                 psql -c 'CREATE DATABASE frameworkeventstore;' -U postgres
                 psql -c 'CREATE DATABASE frameworkviewstore;' -U postgres
