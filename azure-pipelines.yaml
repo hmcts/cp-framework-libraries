@@ -15,8 +15,9 @@ resources:
       ref: 'master'
 
 pool:
-  name: 'MDV-ADO-AGENTS-01'
-
+  name: 'MDV-ADO-AGENT-AKS-01'
+  demands:
+    - identifier -equals simran-temp
 variables:
   - group: "cjs-common-platform"
 
