@@ -98,7 +98,7 @@
         <developerConnection>${cpp.scm.developerConnection}</developerConnection>
         <url>${cpp.scm.url}</url>
     </scm>
-
+<!--
     <build>
 
         <plugins>
@@ -116,7 +116,7 @@
         </plugins>
 
     </build>
-
+-->
     <profiles>
         <profile>
             <id>integration-tests</id>
