@@ -85,7 +85,7 @@ stages:
             inputs:
               targetType: 'filePath'
               filePath: 'target/travis-settings/java/script-install.sh'
-              arguments: 'coveralls:report sonar:sonar'
+              arguments: 'sonar:sonar'
           - task: bash@3
             displayName: 'Deploy'
             inputs:
