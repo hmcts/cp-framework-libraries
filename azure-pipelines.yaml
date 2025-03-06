@@ -71,7 +71,7 @@ stages:
                 cp target/travis-settings/settings.xml ~/.m2/settings.xml
                 cp target/travis-settings/mvnw ./mvnw
                 cp -r target/travis-settings/.mvn .
-                ls -al
+                ls -al  
           - task: bash@3
             displayName: 'Install'
             inputs:
@@ -80,6 +80,7 @@ stages:
               arguments: '-e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services'
             env:
               CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
+              SONARCLOUD_API_KEY: $(SONARCLOUD_API_KEY)
           - task: bash@3
             displayName: 'Test'
             inputs:
