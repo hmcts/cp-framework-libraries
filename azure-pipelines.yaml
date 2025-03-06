@@ -87,8 +87,14 @@ stages:
               targetType: 'filePath'
               filePath: 'target/travis-settings/java/script-install.sh'
               arguments: 'sonar:sonar'
+            env:
+              CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
+              SONARCLOUD_API_KEY: $(SONARCLOUD_API_KEY)
           - task: bash@3
             displayName: 'Deploy'
             inputs:
               targetType: 'filePath'
               filePath: 'target/travis-settings/java/after_success.sh'
+            env:
+              CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
+              SONARCLOUD_API_KEY: $(SONARCLOUD_API_KEY)
