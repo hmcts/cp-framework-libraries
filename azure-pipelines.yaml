@@ -86,7 +86,7 @@ stages:
             inputs:
               targetType: 'filePath'
               filePath: 'target/travis-settings/java/script-install.sh'
-              arguments: 'sonar:sonar'
+              arguments: 'sonar:sonar -Dsonar.login=$(SONARCLOUD_API_KEY) -Dsonar.organization=cjscommonplatform'
             env:
               CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
               SONARCLOUD_API_KEY: $(SONARCLOUD_API_KEY)
