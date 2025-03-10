@@ -12,7 +12,7 @@ resources:
       type: github
       name: hmcts/cjs-travis-settings
       endpoint: 'hmcts'
-      ref: 'master'
+      ref: 'test-new'
 
 pool:
   name: 'MDV-ADO-AGENT-AKS-01'
