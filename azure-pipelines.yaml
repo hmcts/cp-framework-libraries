@@ -25,6 +25,7 @@ stages:
   - stage: BuildAndPublish
     jobs:
       - job: BuildAndPublish
+        timeoutInMinutes: 90
         variables:
           JAVA_TOOL_OPTIONS: '-Dhttps.protocols=TLSv1.2,TLSv1,TLSv1.1'
           PGPORT: 5432
