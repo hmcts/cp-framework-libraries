@@ -75,9 +75,10 @@ stages:
           - task: bash@3
             displayName: 'Install'
             inputs:
-              targetType: 'filePath'
-              filePath: 'target/travis-settings/java/install.sh'
-              arguments: '-e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services'
+              targetType: 'inline'
+              script: |
+                set -x
+                bash target/travis-settings/java/install.sh -e -DexcludeGroupIds=uk.gov.justice.service,uk.gov.justice.services
             env:
               CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
               SONARCLOUD_API_KEY: $(SONARCLOUD_API_KEY)
