@@ -54,6 +54,15 @@ stages:
                 psql -c "GRANT all ON SCHEMA public TO framework;" -d frameworkviewstore -U postgres
                 psql -c "GRANT all ON SCHEMA public TO framework;" -d frameworkfilestore -U postgres
                 psql -c "GRANT all ON SCHEMA public TO framework;" -d frameworkjobstore -U postgres
+
+          - task: Cache@2
+            condition: and(succeeded(), eq(variables.shouldrun, 'true'))
+            inputs:
+              key: 'maven | "$(Agent.OS)" | **/pom.xml'
+              restoreKeys: |
+                maven | "$(Agent.OS)"
+              path: $(System.DefaultWorkingDirectory)/.m2/repository
+
           - task: bash@3
             displayName: 'Pre-Install'
             inputs:
@@ -88,7 +97,7 @@ stages:
             inputs:
               targetType: 'filePath'
               filePath: 'target/travis-settings/java/script-install.sh'
-              arguments: 'sonar:sonar -Dsonar.login=$(SONARCLOUD_API_KEY) -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=uk.gov.justice.framework.libraries:framework-libraries -Dsonar.organization=cjscommonplatform'
+              arguments: 'sonar:sonar -Dsonar.login=$(SONARCLOUD_API_KEY) -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=uk.gov.justice.framework.libraries:framework-libraries -Dsonar.organization=cjscommonplatform coveralls:report -DrepoToken="gjyMlRmiQgtpLBlTSZkf9vB73rJc9WOiX" -Dcoveralls.endpoint="https://coveralls.io/" '
             env:
               CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
               SONARCLOUD_API_KEY: $(SONARCLOUD_API_KEY)
