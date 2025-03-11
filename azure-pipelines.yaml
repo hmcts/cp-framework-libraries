@@ -1,7 +1,13 @@
 name: CJS Library Build & Publish
 
-# Need to update this for actual migration.
-trigger: none
+trigger:
+  branches:
+    include:
+      - main
+      - 'release-*'
+  paths:
+    include:
+      - '*'
 
 pr:
   - '*'
