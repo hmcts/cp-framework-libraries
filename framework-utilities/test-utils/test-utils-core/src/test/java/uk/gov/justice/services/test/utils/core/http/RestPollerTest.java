@@ -54,6 +54,8 @@ public class RestPollerTest {
 
     @Mock
     private Response response;
+    @Mock
+    private RequestParams requestParams;
 
     private RestPoller poll;
 
@@ -77,7 +79,7 @@ public class RestPollerTest {
         poll.until(
                 payload()
                         .isJson(allOf(
-                                withJsonPath("$.payloadKey", equalTo(payloadValue))
+                                        withJsonPath("$.payloadKey", equalTo(payloadValue))
                                 )
                         )
         );
@@ -113,7 +115,7 @@ public class RestPollerTest {
         poll.until(
                 payload()
                         .isJson(allOf(
-                                withJsonPath("$.payloadKey", equalTo(payloadValue))
+                                        withJsonPath("$.payloadKey", equalTo(payloadValue))
                                 )
                         ),
                 status().is(ACCEPTED)
@@ -181,9 +183,9 @@ public class RestPollerTest {
                         status().is(OK),
                         payload()
                                 .isJson(allOf(
-                                        withJsonPath("$.events", hasSize(2)),
-                                        withJsonPath("$.events[0].userId", is(userId1)),
-                                        withJsonPath("$.events[1].userId", is(userId2))
+                                                withJsonPath("$.events", hasSize(2)),
+                                                withJsonPath("$.events[0].userId", is(userId1)),
+                                                withJsonPath("$.events[1].userId", is(userId2))
                                         )
                                 )
                 );
@@ -206,6 +208,52 @@ public class RestPollerTest {
         );
 
         verify(restClient, times(2)).query(REQUEST_URL, MEDIA_TYPE, new MultivaluedHashMap<>(HEADERS));
+        verify(response, times(2)).getStatus();
+    }
+
+    @Test
+    public void shouldPollUsingExponentialBackoffStrategyUntilExpectedResponse() {
+        final String payloadValue = "expected-value";
+        when(response.readEntity(String.class))
+                .thenReturn("{}")
+                .thenReturn("{\"payloadKey\":\"" + payloadValue + "\"}");
+        when(response.getStatus())
+                .thenReturn(NOT_FOUND.getStatusCode())
+                .thenReturn(ACCEPTED.getStatusCode());
+
+        RestPoller poller = new RestPoller(restClient, requestParams(REQUEST_URL, MEDIA_TYPE)
+                .withHeaders(HEADERS).build(), 1L);
+
+        poller.until(
+                payload().isJson(withJsonPath("$.payloadKey", equalTo(payloadValue))),
+                status().is(ACCEPTED)
+        );
+
+        verify(restClient, times(2)).query(REQUEST_URL, MEDIA_TYPE, new MultivaluedHashMap<>(HEADERS));
+        verify(response, times(2)).readEntity(String.class);
+        verify(response, times(2)).getStatus();
+    }
+
+    @Test
+    public void shouldPollUsingFibonacciStrategyUntilExpectedResponse() {
+        final String payloadValue = "expected-value";
+        when(response.readEntity(String.class))
+                .thenReturn("{}")
+                .thenReturn("{\"payloadKey\":\"" + payloadValue + "\"}");
+        when(response.getStatus())
+                .thenReturn(NOT_FOUND.getStatusCode())
+                .thenReturn(ACCEPTED.getStatusCode());
+
+        RestPoller poller = new RestPoller(restClient, requestParams(REQUEST_URL, MEDIA_TYPE)
+                .withHeaders(HEADERS).build(), 1);
+
+        poller.until(
+                payload().isJson(withJsonPath("$.payloadKey", equalTo(payloadValue))),
+                status().is(ACCEPTED)
+        );
+
+        verify(restClient, times(2)).query(REQUEST_URL, MEDIA_TYPE, new MultivaluedHashMap<>(HEADERS));
+        verify(response, times(2)).readEntity(String.class);
         verify(response, times(2)).getStatus();
     }
 
