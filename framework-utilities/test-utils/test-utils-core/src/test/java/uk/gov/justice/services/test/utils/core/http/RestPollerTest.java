@@ -212,7 +212,7 @@ public class RestPollerTest {
     }
 
     @Test
-    public void shouldPollUsingExponentialBackoffStrategyUntilExpectedResponse() {
+    void shouldPollUsingExponentialBackoffStrategyUntilExpectedResponse() {
         final String payloadValue = "expected-value";
         when(response.readEntity(String.class))
                 .thenReturn("{}")
@@ -235,7 +235,7 @@ public class RestPollerTest {
     }
 
     @Test
-    public void shouldPollUsingFibonacciStrategyUntilExpectedResponse() {
+    void shouldPollUsingFibonacciStrategyUntilExpectedResponse() {
         final String payloadValue = "expected-value";
         when(response.readEntity(String.class))
                 .thenReturn("{}")

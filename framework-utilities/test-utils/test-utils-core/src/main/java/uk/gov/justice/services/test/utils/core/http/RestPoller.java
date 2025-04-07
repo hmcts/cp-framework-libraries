@@ -162,8 +162,8 @@ public class RestPoller {
         this.await = await()
                 .with()
                 .pollInterval((pollCount, previousDuration) ->
-                        Duration.ofMillis((long) (exponentialStartIntervalMs * Math.pow(2, pollCount - 1))))
-                .timeout(10, TimeUnit.SECONDS);
+                        Duration.ofMillis((long) ((double) exponentialStartIntervalMs * Math.pow(2, pollCount - 1))))
+                .timeout(10, SECONDS);
     }
 
     /**
