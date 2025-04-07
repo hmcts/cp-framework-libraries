@@ -137,7 +137,9 @@ public class RestPoller {
     RestPoller(final RestClient restClient, final RequestParams requestParams) {
         this.requestParams = requestParams;
         this.restClient = restClient;
-        this.await = await().with().pollInterval(1, SECONDS).with().timeout(10, SECONDS);
+        this.await = await().with()
+                .pollInterval(1, SECONDS)
+                .with().timeout(10, SECONDS);
     }
 
     /**
