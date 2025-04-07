@@ -30,9 +30,9 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 /**
  * Client for polling a rest endpoint and matching the response against the specified Matcher.
- * <p>
+ *
  * To Use:
- * <p>
+ *
  * Poll until the response has specified number of events with required json payload:
  * <pre><blockquote>
  *
@@ -60,12 +60,12 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  *      ;
  *
  * </blockquote></pre>
- * <p>
+ *
  * The call is configured using <code>RequestParams</code>. This object is most easily created using
  * a <code>RequestParamsBuilder</code> which takes a url and media type and will supply all other
  * required parameters with defaults. Overriding these defaults is done in the usual builder pattern
  * way.
- * <p>
+ *
  * Poll until the response has specified substring in the payload:
  * <pre><blockquote>
  *
@@ -90,7 +90,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  *      ;
  *
  * </blockquote></pre>
- * <p>
+ *
  * Poll ignoring certain response status, until the response has specified number of events with
  * required data:
  * <pre><blockquote>
@@ -261,7 +261,7 @@ public class RestPoller {
 
     /**
      * Poll at most <code>timeout</code> before throwing a timeout exception.
-     * <p>
+     *
      * Overrides the default timeout period. If not specified a default of 10 seconds is used.
      *
      * @param timeout the timeout
