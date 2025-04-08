@@ -1,6 +1,6 @@
 # Framework Libraries
 
-[![Build Status](https://travis-ci.org/CJSCommonPlatform/framework-libraries.svg?branch=master)](https://travis-ci.org/CJSCommonPlatform/framework-libraries) [![Coverage Status](https://coveralls.io/repos/github/CJSCommonPlatform/framework-libraries/badge.svg?branch=master)](https://coveralls.io/github/CJSCommonPlatform/framework-libraries?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/hmcts/cp-framework-libraries/badge.svg?branch=main)](https://coveralls.io/github/hmcts/cp-framework-libraries?branch=main)
 
 Common Libraries used by [Microservice Framework](https://github.com/CJSCommonPlatform/microservice_framework)
 
@@ -42,4 +42,5 @@ A plugin for validating annotations, that creates a report that lists what class
 
 # [Domain Test DSL](./domain-test-dsl/README.md)
  
+
 
