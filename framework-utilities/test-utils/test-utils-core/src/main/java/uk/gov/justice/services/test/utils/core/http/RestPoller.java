@@ -136,7 +136,7 @@ public class RestPoller {
     private Optional<Matcher<ResponseData>> ignoredResponseMatcher = empty();
 
     /**
-     * Sends envelope to the next component setting system user id.
+     * Instantiates a new rest poller
      *
      * @deprecated use RestPoller(RestClient, requestParams, pollInterval, timeout),
      * default polling values defined here are not viable for most of usages
@@ -164,11 +164,10 @@ public class RestPoller {
     /**
      * Instantiates a new rest poller
      *
-     * @deprecated use poll(RestClient, requestParams, pollInterval, timeout),
-     * default polling values defined here are not viable for most of usages
-     *
      * @param requestParams request parameters
      * @return this
+     * @deprecated use poll(RestClient, requestParams, pollInterval, timeout),
+     * default polling values defined here are not viable for most of usages
      */
     @Deprecated
     public static RestPoller poll(final RequestParams requestParams) {
@@ -178,11 +177,10 @@ public class RestPoller {
     /**
      * Instantiates a new rest poller
      *
-     * @deprecated use poll(RestClient, requestParams, pollInterval, timeout),
-     * default polling values defined here are not viable for most of usages
-     *
      * @param requestParamsBuilder request parameters builder
      * @return this
+     * @deprecated use poll(RestClient, requestParams, pollInterval, timeout),
+     * default polling values defined here are not viable for most of usages
      */
     @Deprecated
     public static RestPoller poll(final RequestParamsBuilder requestParamsBuilder) {
@@ -259,12 +257,12 @@ public class RestPoller {
 
     /**
      * Overrides the delay between polls. If not specified a default of 1 second is used.
+     *
      * @param pollInterval PollInterval Strategy, please look {@link FibonacciPollWithStartAndMax}
-     * @param timeout max amount of time to poll
-     * @return
+     * @return this
      */
-    public RestPoller pollInterval(PollInterval pollInterval, Duration timeout) {
-        this.await = this.await.with().pollInterval(pollInterval).timeout(timeout);
+    public RestPoller pollInterval(PollInterval pollInterval) {
+        this.await = this.await.with().pollInterval(pollInterval);
         return this;
     }
 
