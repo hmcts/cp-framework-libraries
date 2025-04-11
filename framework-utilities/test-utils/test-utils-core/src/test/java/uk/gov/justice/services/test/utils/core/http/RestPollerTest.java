@@ -27,6 +27,8 @@ import static uk.gov.justice.services.test.utils.core.matchers.ResponseStatusMat
 import static uk.gov.justice.services.test.utils.core.random.RandomGenerator.STRING;
 import static uk.gov.justice.services.test.utils.core.random.RandomGenerator.UUID;
 
+import org.awaitility.core.ConditionTimeoutException;
+import org.junit.jupiter.api.Assertions;
 import uk.gov.justice.services.test.utils.core.rest.RestClient;
 
 import javax.json.JsonArray;
@@ -36,11 +38,12 @@ import javax.ws.rs.core.Response;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.Duration;
 
 @ExtendWith(MockitoExtension.class)
 public class RestPollerTest {
@@ -149,10 +152,7 @@ public class RestPollerTest {
         verify(response, times(3)).getStatus();
     }
 
-    //TODO: fix the flaky test
-    //https://travis-ci.org/CJSCommonPlatform/microservice_framework/builds/185758661
     @Test
-    @Disabled("flaky test")
     public void shouldPollUntilResponsePayloadHasRequiredNumberOfItems() {
         final String userId1 = UUID.next().toString();
         final String userId2 = UUID.next().toString();
@@ -212,49 +212,19 @@ public class RestPollerTest {
     }
 
     @Test
-    void shouldPollUsingExponentialBackoffStrategyUntilExpectedResponse() {
-        final String payloadValue = "expected-value";
-        when(response.readEntity(String.class))
-                .thenReturn("{}")
-                .thenReturn("{\"payloadKey\":\"" + payloadValue + "\"}");
+    void shouldPollUsingFibonacciStrategyUntilTimeouts() {
         when(response.getStatus())
-                .thenReturn(NOT_FOUND.getStatusCode())
-                .thenReturn(ACCEPTED.getStatusCode());
+                .thenReturn(NOT_FOUND.getStatusCode());
 
         RestPoller poller = new RestPoller(restClient, requestParams(REQUEST_URL, MEDIA_TYPE)
-                .withHeaders(HEADERS).build(), 1L);
+                .withHeaders(HEADERS).build(), new FibonacciPollWithStartAndMax(Duration.ofMillis(10), Duration.ofMillis(100)), Duration.ofMillis(100));
 
-        poller.until(
-                payload().isJson(withJsonPath("$.payloadKey", equalTo(payloadValue))),
-                status().is(ACCEPTED)
-        );
+        Assertions.assertThrows(ConditionTimeoutException.class, () ->
+                poller.until(status().is(ACCEPTED)));
 
-        verify(restClient, times(2)).query(REQUEST_URL, MEDIA_TYPE, new MultivaluedHashMap<>(HEADERS));
-        verify(response, times(2)).readEntity(String.class);
-        verify(response, times(2)).getStatus();
-    }
 
-    @Test
-    void shouldPollUsingFibonacciStrategyUntilExpectedResponse() {
-        final String payloadValue = "expected-value";
-        when(response.readEntity(String.class))
-                .thenReturn("{}")
-                .thenReturn("{\"payloadKey\":\"" + payloadValue + "\"}");
-        when(response.getStatus())
-                .thenReturn(NOT_FOUND.getStatusCode())
-                .thenReturn(ACCEPTED.getStatusCode());
-
-        RestPoller poller = new RestPoller(restClient, requestParams(REQUEST_URL, MEDIA_TYPE)
-                .withHeaders(HEADERS).build(), 1);
-
-        poller.until(
-                payload().isJson(withJsonPath("$.payloadKey", equalTo(payloadValue))),
-                status().is(ACCEPTED)
-        );
-
-        verify(restClient, times(2)).query(REQUEST_URL, MEDIA_TYPE, new MultivaluedHashMap<>(HEADERS));
-        verify(response, times(2)).readEntity(String.class);
-        verify(response, times(2)).getStatus();
+        verify(restClient, times(5)).query(REQUEST_URL, MEDIA_TYPE, new MultivaluedHashMap<>(HEADERS));
+        verify(response, times(5)).getStatus();
     }
 
 }

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file, which loose
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-
+- Extended RestPoller to include custom PollInterval implementation and introduced FibonacciPollWithStartAndMax class
 
 # [17.102.1] - 2025-02-26
 ### Changed
