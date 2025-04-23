@@ -16,7 +16,6 @@
 
     <modules>
         <module>utilities-core</module>
-        <module>utilities-file</module>
     </modules>
 
 </project>

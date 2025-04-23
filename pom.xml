@@ -22,8 +22,6 @@
         <module>annotation-validator</module>
         <module>domain-test-dsl</module>
         <module>embedded-artemis</module>
-        <module>file-service</module>
-        <module>file-service-alfresco</module>
         <module>framework-api</module>
         <module>framework-libraries-bom</module>
         <module>framework-utilities</module>

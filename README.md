@@ -12,9 +12,6 @@ The Java API for a framework to support applications utilising CQRS and Event So
 # [Framework Utilities](./framework-utilities/README.md)
 Main repository for utilities used by [Microservice Framework](https://github.com/CJSCommonPlatform/microservice_framework)
 
-# [File Service](./file-service/README.md)
-A simple drop in library for storing binary files in Postgres. 
-
 # [Maven Generator Plugin](./generator-maven-plugin/README.md)
 A plugin for using [RAML](http://raml.org/) within Maven projects for the generation of [Microservice Framework](https://github.com/CJSCommonPlatform/microservice_framework) code. 
 
@@ -37,8 +34,6 @@ An embedded version of Artemis that can be included in a project for testing.
 A plugin for validating annotations, that creates a report that lists what classes have which annotations
 
 # [Json Transformer](./json-transformer/README.md)
-
-# [File Service Alfresco](./file-service-alfresco/README.md)
 
 # [Domain Test DSL](./domain-test-dsl/README.md)
  
