@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - Moved file-service modules to separate git repo hmcts/cp-file-service
-- Removed file-service dependencies from the framework-libraries-common-bom in favour of importing them through file-service-bom in micro-service-framework
+- Replaced file-service dependencies with file-service-bom import
 
 # [17.102.2] - 2025-04-16
 ### Changed

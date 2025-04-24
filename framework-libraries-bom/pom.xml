@@ -26,6 +26,13 @@
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>uk.gov.justice.services</groupId>
+                <artifactId>file-service-bom</artifactId>
+                <version>${file-service.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
                 <groupId>uk.gov.justice.framework-api</groupId>
                 <artifactId>framework-api-aggregate-service</artifactId>
                 <version>${framework-libraries.version}</version>
