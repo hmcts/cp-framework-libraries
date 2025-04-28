@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file, which loose
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+# [17.103.0-M1] - 2025-04-28
 ### Changed
 - Moved file-service modules to separate git repo hmcts/cp-file-service
 - Replaced file-service dependencies with file-service-bom import
