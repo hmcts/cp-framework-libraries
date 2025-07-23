@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FeatureControl {
 
     private final List<Feature> features;
 
     @JsonCreator
-    public FeatureControl(final List<Feature> features) {
+    public FeatureControl(@JsonProperty("feature") final List<Feature> features) {
         this.features = features;
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Subscription {
 
@@ -13,10 +14,10 @@ public class Subscription {
     private final String prioritisation;
 
     @JsonCreator
-    public Subscription(final String name,
-                        final List<Event> events,
-                        final String eventSourceName,
-                        final String prioritisation) {
+    public Subscription(@JsonProperty("name") final String name,
+                        @JsonProperty("events") final List<Event> events,
+                        @JsonProperty("event_source_name") final String eventSourceName,
+                        @JsonProperty("prioritisation") final String prioritisation) {
         this.name = name;
         this.events = events;
         this.eventSourceName = eventSourceName;
@@ -53,5 +54,15 @@ public class Subscription {
     @Override
     public int hashCode() {
         return Objects.hash(name, events,prioritisation, eventSourceName);
+    }
+
+    @Override
+    public String toString() {
+        return "Subscription{" +
+               "name='" + name + '\'' +
+               ", events=" + events +
+               ", eventSourceName='" + eventSourceName + '\'' +
+               ", prioritisation='" + prioritisation + '\'' +
+               '}';
     }
 }

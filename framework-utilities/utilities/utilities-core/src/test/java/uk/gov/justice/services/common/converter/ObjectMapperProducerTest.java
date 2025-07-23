@@ -1,5 +1,6 @@
 package uk.gov.justice.services.common.converter;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.jayway.jsonassert.JsonAssert.with;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -16,6 +17,8 @@ import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.ISO_8601;
 
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
+import uk.gov.justice.services.yaml.subscriptiondescriptor.SubscriptionDescriptorDef;
+import uk.gov.justice.services.yaml.subscriptiondescriptor.SubscriptionsDescriptor;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -31,6 +34,7 @@ import javax.json.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.jayway.jsonassert.JsonAssert;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,9 +45,35 @@ public class ObjectMapperProducerTest {
     private static final String JSON_OBJECT_STRING = "{\n" +
             "  \"id\": \"861c9430-7bc6-4bf0-b549-6534394b8d65\"\n" +
             "}";
+
     private static final String YAML_AS_STRING = "---\n" +
             "subscription_descriptor:\n" +
             "  spec_version: 1.0.0\n";
+
+    private static final String YAML = """
+            subscriptions_descriptor:
+              spec_version: 1.0.0
+              service: examplecontext
+              service_component: EVENT_LISTENER
+              subscriptions:
+                - name: subscription1
+                  prioritisation: 1
+                  events:
+                    - name: example.recipe-added
+                      schema_uri: http://justice.gov.uk/json/schemas/domains/example/example.recipe-added.json
+                    - name: example.recipe-deleted
+                      schema_uri: http://justice.gov.uk/json/schemas/domains/example/example.recipe-deleted.json
+                  event_source_name: example
+            
+                - name: subscription2
+                  events:
+                    - name: people.person-added
+                      schema_uri: http://justice.gov.uk/json/schemas/domains/people/people.person-added.json
+                    - name: people.person-removed
+                      schema_uri: http://justice.gov.uk/json/schemas/domains/people/people.person-removed.json
+                  event_source_name: people
+            ...
+            """;
 
     private ObjectMapper objectMapper;
 
@@ -285,12 +315,93 @@ public class ObjectMapperProducerTest {
 
     @Test
     public void shouldConvertYamlToJsonObject() throws Exception {
-        final ObjectMapper yamlObjectMapper = new ObjectMapperProducer().objectMapperWith(new YAMLFactory());
+        final ObjectMapper yamlObjectMapper = new ObjectMapperProducer().yamlObjectMapper();
 
         final Object yamlObject = yamlObjectMapper.readValue(YAML_AS_STRING, Object.class);
         final JSONObject yamlAsJsonObject = new JSONObject(objectMapper.writeValueAsString(yamlObject));
 
         assertThat(yamlAsJsonObject.getJSONObject("subscription_descriptor").get("spec_version"), is("1.0.0"));
+    }
+
+    @Test
+    public void shouldConvertYamlToJsonObject2() throws Exception {
+
+        final String yaml = """
+                subscriptions_descriptor:
+                  spec_version: 1.0.0
+                  service: examplecontext
+                  service_component: EVENT_LISTENER
+                  subscriptions:
+                    - name: subscription1
+                      prioritisation: 1
+                      events:
+                        - name: example.recipe-added
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/example/example.recipe-added.json
+                        - name: example.recipe-deleted
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/example/example.recipe-deleted.json
+                      event_source_name: example
+                
+                    - name: subscription2
+                      events:
+                        - name: people.person-added
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/people/people.person-added.json
+                        - name: people.person-removed
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/people/people.person-removed.json
+                      event_source_name: people
+                ...
+                """;
+
+        final ObjectMapper yamlObjectMapper = new ObjectMapperProducer().yamlObjectMapper();
+
+        final Object yamlObject = yamlObjectMapper.readValue(yaml, Object.class);
+        final JSONObject yamlAsJsonObject = new JSONObject(objectMapper.writeValueAsString(yamlObject));
+
+
+        System.out.println(yamlAsJsonObject);
+        assertThat(yamlAsJsonObject.getJSONObject("subscriptions_descriptor").get("spec_version"), is("1.0.0"));
+    }
+
+
+    @Test
+    public void shouldConvertYamlToJsonObject3() throws Exception {
+
+        final String yaml = """
+                subscriptions_descriptor:
+                  spec_version: 1.0.0
+                  service: examplecontext
+                  service_component: EVENT_LISTENER
+                  subscriptions:
+                    - name: subscription1
+                      prioritisation: 1
+                      events:
+                        - name: example.recipe-added
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/example/example.recipe-added.json
+                        - name: example.recipe-deleted
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/example/example.recipe-deleted.json
+                      event_source_name: example
+                
+                    - name: subscription2
+                      events:
+                        - name: people.person-added
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/people/people.person-added.json
+                        - name: people.person-removed
+                          schema_uri: http://justice.gov.uk/json/schemas/domains/people/people.person-removed.json
+                      event_source_name: people
+                ...
+                """;
+
+        final ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory())
+        .configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
+                ;
+
+        final SubscriptionDescriptorDef subscriptionsDescriptor = yamlObjectMapper.readValue(yaml, SubscriptionDescriptorDef.class);
+        System.out.println(subscriptionsDescriptor);
+
+//        final JSONObject yamlAsJsonObject = new JSONObject(objectMapper.writeValueAsString(yamlObject));
+//
+//
+//        System.out.println(yamlAsJsonObject);
+//        assertThat(yamlAsJsonObject.getJSONObject("subscriptions_descriptor").get("spec_version"), is("1.0.0"));
     }
 
     @Test

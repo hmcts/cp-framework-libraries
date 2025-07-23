@@ -2,12 +2,16 @@ package uk.gov.justice.services.core.featurecontrol.domain;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Feature {
 
     private final String featureName;
     private final boolean enabled;
 
-    public Feature(final String featureName, final boolean enabled) {
+    @JsonCreator
+    public Feature(@JsonProperty("feature_name") final String featureName, @JsonProperty("enabled") final boolean enabled) {
         this.featureName = featureName;
         this.enabled = enabled;
     }

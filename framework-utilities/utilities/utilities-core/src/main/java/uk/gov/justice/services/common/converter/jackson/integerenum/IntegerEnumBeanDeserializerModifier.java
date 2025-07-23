@@ -22,7 +22,7 @@ public class IntegerEnumBeanDeserializerModifier extends BeanDeserializerModifie
 
         final Class<Enum<?>> enumClass = (Class<Enum<?>>) type.getRawClass();
 
-        final EnumResolver enumResolver = constructFor(enumClass, nopInstance());
+        final EnumResolver enumResolver = constructFor(config, enumClass);
 
         return new IntegerEnumDeserializer(
                 enumResolver,

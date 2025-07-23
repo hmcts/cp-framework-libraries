@@ -1,5 +1,7 @@
 package uk.gov.justice.services.common.converter;
 
+import static java.time.ZoneOffset.UTC;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.UUID.randomUUID;
 import static javax.json.Json.createObjectBuilder;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -9,12 +11,14 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.mockito.Mockito.doThrow;
+import static uk.gov.justice.services.common.converter.ZonedDateTimes.ISO_8601;
 
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
 
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,23 +68,33 @@ public class JsonObjectToObjectConverterTest {
     @Test
     public void shouldConvertToPojoWithUTCDateTime() throws Exception {
 
-        assertThat(jsonObjectToObjectConverter
-                        .convert(Json.createObjectBuilder().add("dateTime", "2016-07-25T13:09:01.0+00:00").build(),
-                                PojoWithDateTime.class).getDateTime(),
-                equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
-        assertThat(jsonObjectToObjectConverter
-                        .convert(Json.createObjectBuilder().add("dateTime", "2016-07-25T13:09:01.0Z").build(),
-                                PojoWithDateTime.class).getDateTime(),
-                equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
-        assertThat(jsonObjectToObjectConverter
-                        .convert(Json.createObjectBuilder().add("dateTime", "2016-07-25T13:09:01Z").build(),
-                                PojoWithDateTime.class).getDateTime(),
-                equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
-        assertThat(jsonObjectToObjectConverter
-                        .convert(Json.createObjectBuilder().add("dateTime", "2016-07-25T16:09:01.0+03:00").build(),
-                                PojoWithDateTime.class).getDateTime(),
-                equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
+        final ZonedDateTime expectedDateTime = ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, UTC);
 
+        final PojoWithDateTime pojoWithDateTime_1 = jsonObjectToObjectConverter.convert(
+                createObjectBuilder()
+                        .add("dateTime", "2016-07-25T13:09:01.0+00:00")
+                        .build(),
+                PojoWithDateTime.class);
+        final PojoWithDateTime pojoWithDateTime_2 = jsonObjectToObjectConverter
+                .convert(createObjectBuilder()
+                                .add("dateTime", "2016-07-25T13:09:01.0Z")
+                                .build(),
+                        PojoWithDateTime.class);
+        final PojoWithDateTime pojoWithDateTime_3 = jsonObjectToObjectConverter
+                .convert(createObjectBuilder()
+                                .add("dateTime", "2016-07-25T16:09:01.0+03:00")
+                                .build(),
+                        PojoWithDateTime.class);
+        final PojoWithDateTime pojoWithDateTime_4 = jsonObjectToObjectConverter
+                .convert(createObjectBuilder()
+                                .add("dateTime", "2016-07-25T13:09:01.000Z")
+                                .build(),
+                        PojoWithDateTime.class);
+
+        assertThat(pojoWithDateTime_1.getDateTime(), equalTo(expectedDateTime));
+        assertThat(pojoWithDateTime_2.getDateTime(), equalTo(expectedDateTime));
+        assertThat(pojoWithDateTime_3.getDateTime(), equalTo(expectedDateTime));
+        assertThat(pojoWithDateTime_4.getDateTime(), equalTo(expectedDateTime));
     }
 
     @Test
@@ -88,7 +102,7 @@ public class JsonObjectToObjectConverterTest {
 
         final UUID uuid = randomUUID();
 
-        final JsonObject jsonObject = Json.createObjectBuilder().add("id", uuid.toString()).build();
+        final JsonObject jsonObject = createObjectBuilder().add("id", uuid.toString()).build();
 
         doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(jsonObject);
 
@@ -119,10 +133,10 @@ public class JsonObjectToObjectConverterTest {
                 .add(ATTRIBUTE_1)
                 .add(ATTRIBUTE_2).build();
 
-        return Json.createObjectBuilder()
+        return createObjectBuilder()
                 .add("id", ID.toString())
                 .add("name", NAME)
-                .add("internalPojo", Json.createObjectBuilder()
+                .add("internalPojo", createObjectBuilder()
                         .add("internalId", INTERNAL_ID.toString())
                         .add("internalName", INTERNAL_NAME).build())
                 .add("attributes", array).build();
@@ -135,7 +149,7 @@ public class JsonObjectToObjectConverterTest {
         private List<String> attributes;
         private InternalPojo internalPojo;
 
-        public Pojo () {
+        public Pojo() {
 
         }
 
@@ -203,7 +217,7 @@ public class JsonObjectToObjectConverterTest {
     public static class SingleArgumentConstructorPojo {
         private UUID id;
 
-        public SingleArgumentConstructorPojo (UUID id) {
+        public SingleArgumentConstructorPojo(UUID id) {
             this.id = id;
         }
 

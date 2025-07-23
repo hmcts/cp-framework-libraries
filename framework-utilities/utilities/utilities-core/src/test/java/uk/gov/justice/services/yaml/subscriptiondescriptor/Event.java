@@ -1,6 +1,7 @@
 package uk.gov.justice.services.yaml.subscriptiondescriptor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {
 
@@ -8,7 +9,7 @@ public class Event {
     private final String schemaUri;
 
     @JsonCreator
-    public Event(final String name, final String schemaUri) {
+    public Event(@JsonProperty("name") final String name, @JsonProperty("schema_uri") final String schemaUri) {
         this.name = name;
         this.schemaUri = schemaUri;
     }
@@ -19,5 +20,13 @@ public class Event {
 
     public String getSchemaUri() {
         return schemaUri;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+               "name='" + name + '\'' +
+               ", schemaUri='" + schemaUri + '\'' +
+               '}';
     }
 }

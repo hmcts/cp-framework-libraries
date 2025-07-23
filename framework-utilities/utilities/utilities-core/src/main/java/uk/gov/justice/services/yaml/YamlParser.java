@@ -1,5 +1,6 @@
 package uk.gov.justice.services.yaml;
 
+import static com.fasterxml.jackson.databind.cfg.ConstructorDetector.USE_PROPERTIES_BASED;
 import static java.lang.String.format;
 
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
@@ -9,6 +10,7 @@ import java.net.URL;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class YamlParser {
 

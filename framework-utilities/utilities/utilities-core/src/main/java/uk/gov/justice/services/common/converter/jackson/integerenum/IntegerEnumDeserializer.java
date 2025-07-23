@@ -21,7 +21,7 @@ public class IntegerEnumDeserializer extends EnumDeserializer {
 
     public IntegerEnumDeserializer(final EnumResolver enumResolver,
                                    final EnumObjectUtil enumObjectUtil) {
-        super(enumResolver);
+        super(enumResolver, true);
         this.enumerations = asList(enumResolver.getRawEnums());
         this.enumObjectUtil = enumObjectUtil;
     }
