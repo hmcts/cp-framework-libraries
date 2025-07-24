@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.jupiter.api.Test;
 
 public class YamlParserTest {
@@ -49,8 +53,7 @@ public class YamlParserTest {
         assertThat(events_1.get(1).getName(), is("example.recipe-deleted"));
         assertThat(events_1.get(1).getSchemaUri(), is("http://justice.gov.uk/json/schemas/domains/example/example.recipe-deleted.json"));
     }
-
-
+    
     @Test
     public void shouldParseSubscriptionPathAsSubscriptionDescriptorDef() throws Exception {
 

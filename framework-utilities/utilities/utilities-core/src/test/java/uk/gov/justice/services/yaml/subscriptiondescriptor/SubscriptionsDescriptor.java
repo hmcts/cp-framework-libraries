@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SubscriptionsDescriptor {
 
@@ -13,7 +14,11 @@ public class SubscriptionsDescriptor {
     private final List<Subscription> subscriptions;
 
     @JsonCreator
-    public SubscriptionsDescriptor(final String specVersion, final String service, final String serviceComponent, final List<Subscription> subscriptions) {
+    public SubscriptionsDescriptor(
+            @JsonProperty("spec_version") final String specVersion,
+            @JsonProperty("service") final String service,
+            @JsonProperty("service_component") final String serviceComponent,
+            @JsonProperty("subscription") final List<Subscription> subscriptions) {
         this.specVersion = specVersion;
         this.service = service;
         this.serviceComponent = serviceComponent;
@@ -51,4 +56,13 @@ public class SubscriptionsDescriptor {
         return subscriptions;
     }
 
+    @Override
+    public String toString() {
+        return "SubscriptionsDescriptor{" +
+               "specVersion='" + specVersion + '\'' +
+               ", service='" + service + '\'' +
+               ", serviceComponent='" + serviceComponent + '\'' +
+               ", subscriptions=" + subscriptions +
+               '}';
+    }
 }

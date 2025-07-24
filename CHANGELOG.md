@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file, which loose
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Security
+- Upgrade jackson to version 2.15.0 to fix security vulnerabilities:
+    - **CVE-2022-42003** Detail: https://cwe.mitre.org/data/definitions/502.html
+    - **CVE-2025-52999** Detail: https://cwe.mitre.org/data/definitions/121.html
+    - **CVE-2022-42004** Detail: https://cwe.mitre.org/data/definitions/400.html
+    - **CCVE-2025-49128** Detail: https://cwe.mitre.org/data/definitions/209.html
 
 # [17.103.0] - 2025-07-16
 ### Changed
