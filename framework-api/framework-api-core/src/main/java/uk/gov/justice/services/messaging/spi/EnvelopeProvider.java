@@ -21,6 +21,9 @@ import javax.json.JsonValue;
  */
 public interface EnvelopeProvider {
 
+    EnvelopeProvider ENVELOPE_PROVIDER = new EnvelopeProviderSelector()
+            .selectFrom(ServiceLoader.load(EnvelopeProvider.class).spliterator());
+
     /**
      * Loads an implementation of EnvelopeProvider using the {@link ServiceLoader} mechanism. An
      * instance of the first implementing class from the loader list is returned.
@@ -30,8 +33,7 @@ public interface EnvelopeProvider {
      *                                           are found
      */
     static EnvelopeProvider provider() {
-        return new EnvelopeProviderSelector()
-                .selectFrom(load(EnvelopeProvider.class).spliterator());
+        return ENVELOPE_PROVIDER;
     }
 
     /**
