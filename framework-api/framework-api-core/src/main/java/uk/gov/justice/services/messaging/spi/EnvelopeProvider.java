@@ -1,7 +1,6 @@
 package uk.gov.justice.services.messaging.spi;
 
 import static java.lang.Integer.MAX_VALUE;
-import static java.util.ServiceLoader.load;
 
 import uk.gov.justice.services.messaging.Envelope;
 import uk.gov.justice.services.messaging.Metadata;
