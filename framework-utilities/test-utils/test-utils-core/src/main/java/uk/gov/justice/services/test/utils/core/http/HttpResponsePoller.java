@@ -101,9 +101,10 @@ public class HttpResponsePoller {
     private Predicate<String> compareJsonObjectWith(final Map<String, String> values) {
         return entity -> {
             if (entity != null) {
-                final JsonReader jsonReader = jsonReaderFactory.createReader(new StringReader(entity));
-                final JsonObject jsonObject = jsonReader.readObject();
-                jsonReader.close();
+                final JsonObject jsonObject;
+                try (JsonReader jsonReader = jsonReaderFactory.createReader(new StringReader(entity))) {
+                    jsonObject = jsonReader.readObject();
+                }
 
                 final boolean anyMatchFalse = values.entrySet().stream().map(entry -> {
                     final Optional<String> value = JsonObjects.getString(jsonObject, entry.getKey());

@@ -30,9 +30,10 @@ public class ExpectedJsonValuesResultCondition implements Predicate<String> {
     @Override
     public boolean test(final String responseBody) {
         if (responseBody != null) {
-            final JsonReader jsonReader = jsonReaderFactory.createReader(new StringReader(responseBody));
-            final JsonObject jsonObject = jsonReader.readObject();
-            jsonReader.close();
+            final JsonObject jsonObject;
+            try (JsonReader jsonReader = jsonReaderFactory.createReader(new StringReader(responseBody))) {
+                jsonObject = jsonReader.readObject();
+            }
 
             final boolean anyMatchFalse = values.entrySet().stream().map(entry -> {
                 final Optional<String> value = JsonObjects.getString(jsonObject, entry.getKey());
