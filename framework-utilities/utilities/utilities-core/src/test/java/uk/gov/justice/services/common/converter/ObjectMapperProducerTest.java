@@ -3,7 +3,6 @@ package uk.gov.justice.services.common.converter;
 import static com.jayway.jsonassert.JsonAssert.with;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static javax.json.Json.createObjectBuilder;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -14,12 +13,11 @@ import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.
 import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.Colour.BLUE;
 import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.Colour.RED;
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.ISO_8601;
+import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
 
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +29,6 @@ import javax.json.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.jayway.jsonassert.JsonAssert;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +74,7 @@ public class ObjectMapperProducerTest {
 
     @Test
     public void shouldOmitsNullValuesFromJsonObjects() throws Exception {
-        final JsonObject source = createObjectBuilder()
+        final JsonObject source = jsonBuilderFactory.createObjectBuilder()
                 .add("id", "861c9430-7bc6-4bf0-b549-6534394b8d65")
                 .add("name", JsonValue.NULL)
                 .build();
