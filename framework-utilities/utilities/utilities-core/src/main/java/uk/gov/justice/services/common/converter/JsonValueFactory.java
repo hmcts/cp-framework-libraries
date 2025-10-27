@@ -2,7 +2,7 @@ package uk.gov.justice.services.common.converter;
 
 import static javax.json.JsonValue.FALSE;
 import static javax.json.JsonValue.TRUE;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import java.math.BigDecimal;
 
@@ -41,7 +41,7 @@ public class JsonValueFactory {
      * @return a JsonString with the given value
      */
     private static JsonString buildJsonString(final String string) {
-        return jsonBuilderFactory.createObjectBuilder().add(PROPERTY_NAME, string).build().getJsonString(PROPERTY_NAME);
+        return getJsonBuilderFactory().createObjectBuilder().add(PROPERTY_NAME, string).build().getJsonString(PROPERTY_NAME);
     }
 
     /**
@@ -52,7 +52,7 @@ public class JsonValueFactory {
      * @return a JsonNumber with the given value
      */
     private static JsonNumber buildJsonNumber(final Integer integer) {
-        return jsonBuilderFactory.createObjectBuilder().add(PROPERTY_NAME, integer).build().getJsonNumber(PROPERTY_NAME);
+        return getJsonBuilderFactory().createObjectBuilder().add(PROPERTY_NAME, integer).build().getJsonNumber(PROPERTY_NAME);
     }
 
     /**
@@ -63,7 +63,7 @@ public class JsonValueFactory {
      * @return a JsonNumber with the given value
      */
     private static JsonNumber buildJsonNumber(final Long longValue) {
-        return jsonBuilderFactory.createObjectBuilder().add(PROPERTY_NAME, longValue).build().getJsonNumber(PROPERTY_NAME);
+        return getJsonBuilderFactory().createObjectBuilder().add(PROPERTY_NAME, longValue).build().getJsonNumber(PROPERTY_NAME);
     }
 
     /**
@@ -74,7 +74,7 @@ public class JsonValueFactory {
      * @return a JsonNumber with the given value
      */
     private static JsonNumber buildJsonNumber(final BigDecimal bigDecimal) {
-        return jsonBuilderFactory.createObjectBuilder().add(PROPERTY_NAME, bigDecimal).build().getJsonNumber(PROPERTY_NAME);
+        return getJsonBuilderFactory().createObjectBuilder().add(PROPERTY_NAME, bigDecimal).build().getJsonNumber(PROPERTY_NAME);
     }
 
     /**

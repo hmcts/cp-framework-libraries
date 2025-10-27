@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file, which loose
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Refactor JsonObject usages to more proper api 
+- Fix HttpClient lifecycle.
 
 # [17.104.0-M5] - 2025-10-13
 ### Changed

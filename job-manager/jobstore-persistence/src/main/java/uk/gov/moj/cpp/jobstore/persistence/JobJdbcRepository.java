@@ -7,7 +7,7 @@ import static java.util.Optional.of;
 import static java.util.UUID.fromString;
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.fromSqlTimestamp;
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.toSqlTimestamp;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonReaderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonReaderFactory;
 
 import uk.gov.justice.framework.libraries.datasource.providers.jobstore.JobStoreDataSourceProvider;
 import uk.gov.justice.services.common.converter.ZonedDateTimes;
@@ -229,7 +229,7 @@ public class JobJdbcRepository implements JobRepository {
     }
 
     private JsonObject toJsonObject(final String json) {
-        try (final JsonReader reader = jsonReaderFactory.createReader(new StringReader(json))) {
+        try (final JsonReader reader = getJsonReaderFactory().createReader(new StringReader(json))) {
             return reader.readObject();
         }
     }

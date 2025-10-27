@@ -15,7 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.toSqlTimestamp;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonReaderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonReaderFactory;
 import static uk.gov.moj.cpp.jobstore.persistence.Priority.HIGH;
 import static uk.gov.moj.cpp.jobstore.persistence.Priority.LOW;
 import static uk.gov.moj.cpp.jobstore.persistence.Priority.MEDIUM;
@@ -379,6 +379,6 @@ public class JobJdbcRepositoryTest {
     }
 
     private JsonObject jobData(final String json) {
-        return jsonReaderFactory.createReader(new StringReader(json)).readObject();
+        return getJsonReaderFactory().createReader(new StringReader(json)).readObject();
     }
 }

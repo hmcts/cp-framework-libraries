@@ -10,8 +10,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static uk.gov.justice.services.messaging.JsonObjects.*;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +36,8 @@ public class JsonObjectsTest {
     private static final String UUID_A = "da45e8f6-d945-4f09-a115-1139a9dbb754";
     private static final String UUID_B = "d04885b4-9652-4c2a-87c6-299bda0a87d4";
 
+    private static final javax.json.JsonBuilderFactory jsonBuilderFactory = JsonObjects.getJsonBuilderFactory();
+    private static final javax.json.JsonReaderFactory jsonReaderFactory = JsonObjects.getJsonReaderFactory();
 
     @Test
     public void shouldReturnJsonArray() {
@@ -365,4 +367,27 @@ public class JsonObjectsTest {
         assertTrue(jsonReaderFactory.getConfigInUse().isEmpty());
     }
 
+    @Test
+    public void shouldGetJsonReaderFactoryAndCacheIt() {
+        // when
+        final javax.json.JsonReaderFactory first = JsonObjects.getJsonReaderFactory();
+        final javax.json.JsonReaderFactory second = JsonObjects.getJsonReaderFactory();
+
+        // then
+        assertNotNull(first);
+        assertTrue(first.getConfigInUse().isEmpty());
+        assertSame(first, second, "JsonReaderFactory should be a cached singleton instance");
+    }
+
+    @Test
+    public void shouldGetJsonWriterFactoryAndCacheIt() {
+        // when
+        final javax.json.JsonWriterFactory first = JsonObjects.getJsonWriterFactory();
+        final javax.json.JsonWriterFactory second = JsonObjects.getJsonWriterFactory();
+
+        // then
+        assertNotNull(first);
+        assertTrue(first.getConfigInUse().isEmpty());
+        assertSame(first, second, "JsonWriterFactory should be a cached singleton instance");
+    }
 }

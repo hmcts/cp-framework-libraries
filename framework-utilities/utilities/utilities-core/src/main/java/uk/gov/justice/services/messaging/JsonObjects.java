@@ -12,7 +12,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
@@ -22,6 +21,8 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonReaderFactory;
 import javax.json.JsonString;
 import javax.json.JsonValue;
+import javax.json.JsonWriterFactory;
+import javax.json.spi.JsonProvider;
 
 import com.google.common.collect.ImmutableList;
 
@@ -29,9 +30,10 @@ import com.google.common.collect.ImmutableList;
  * Collection of static utility methods for getting deep values from a {@link JsonObject}.
  */
 public final class JsonObjects {
-
-    public static final JsonBuilderFactory jsonBuilderFactory = Json.createBuilderFactory(null);
-    public static final JsonReaderFactory jsonReaderFactory = Json.createReaderFactory(null);
+    private static final JsonProvider provider = JsonProvider.provider();
+    private static final JsonBuilderFactory jsonBuilderFactory = provider.createBuilderFactory(null);
+    private static final JsonReaderFactory jsonReaderFactory = provider.createReaderFactory(null);
+    private static final JsonWriterFactory jsonWriterFactory = provider.createWriterFactory(null);
 
 
     private static final String FIELD_IS_NOT_A_TYPE = "Field %s is not a %s";
@@ -40,6 +42,42 @@ public final class JsonObjects {
      * Private constructor to prevent misuse of utility class.
      */
     private JsonObjects() {
+    }
+
+    /**
+     * This is usage instead of Json.getProvider() to avoid re creation of Provider each time
+     *
+     * @return cached provider instance.
+     */
+    public static JsonProvider getProvider() {
+        return provider;
+    }
+
+    /**
+     * This is usage instead of Json.createBuilderFactory(null) to avoid re creation of BuilderFactory each time
+     *
+     * @return cached builder factory instance.
+     */
+    public static JsonBuilderFactory getJsonBuilderFactory() {
+        return jsonBuilderFactory;
+    }
+
+    /**
+     * This is usage instead of Json.createReaderFactory(null) to avoid re creation of ReaderFactory each time
+     *
+     * @return cached reader factory instance.
+     */
+    public static JsonReaderFactory getJsonReaderFactory() {
+        return jsonReaderFactory;
+    }
+
+    /**
+     * This is usage instead of Json.createWriterFactory(null) to avoid re creation of WriterFactory each time
+     *
+     * @return cached writer factory instance.
+     */
+    public static JsonWriterFactory getJsonWriterFactory() {
+        return jsonWriterFactory;
     }
 
     /**
@@ -183,7 +221,7 @@ public final class JsonObjects {
      * A convenience method to retrieve a Boolean value
      *
      * @param object the JsonObject from which to retrieve the value
-     * @param name  whose associated value is to be returned as Long
+     * @param name   whose associated value is to be returned as Long
      * @return the Boolean value to which the specified name is mapped
      * @throws IllegalStateException if the value is not assignable to a Boolean
      */
@@ -194,7 +232,6 @@ public final class JsonObjects {
             throw new IllegalStateException(String.format(FIELD_IS_NOT_A_TYPE, name, "Boolean"));
         }
     }
-
 
 
     /**
@@ -292,9 +329,9 @@ public final class JsonObjects {
     /**
      * Convert a collection of objects into a JsonArray
      *
-     * @param entries the collection to be converted
+     * @param entries   the collection to be converted
      * @param converter to convert each entry in the collection
-     * @param <T> the type of element in the collection
+     * @param <T>       the type of element in the collection
      * @return a JsonArray with the converted entries
      */
     public static <T> JsonArray toJsonArray(final Collection<T> entries, final Function<T, JsonValue> converter) {
