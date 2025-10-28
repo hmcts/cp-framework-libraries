@@ -2,6 +2,10 @@ package uk.gov.justice.services.messaging;
 
 import static javax.json.JsonValue.ValueType;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,14 +19,19 @@ import java.util.stream.Collectors;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
+import javax.json.JsonException;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
 import javax.json.JsonString;
 import javax.json.JsonValue;
+import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.spi.JsonProvider;
+import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonParser;
 
 import com.google.common.collect.ImmutableList;
 
@@ -78,6 +87,106 @@ public final class JsonObjects {
      */
     public static JsonWriterFactory getJsonWriterFactory() {
         return jsonWriterFactory;
+    }
+
+    /**
+     * This is usage instead of Json.createGeneratorFactory(null) to avoid re creation of Provider each time
+     *
+     * @param reader i/o reader from which JSON is to be read
+     * @return a JSON parser
+     */
+    public static JsonParser createParser(Reader reader) {
+        return getProvider().createParser(reader);
+    }
+
+    /**
+     * This is usage instead of Json.createParserFactory(null) to avoid re creation of Provider each time
+     *
+     * @param in i/o stream from which JSON is to be read
+     * @throws JsonException if encoding cannot be determined
+     *         or i/o error (IOException would be cause of JsonException)
+     * @return a JSON parser
+     */
+    public static JsonParser createParser(InputStream in) {
+        return getProvider().createParser(in);
+    }
+
+    /**
+     * This is usage instead of Json.createGeneratorFactory(null) to avoid re creation of Provider each time
+     *
+     * @param writer a i/o writer to which JSON is written
+     * @return a JSON generator
+     */
+    public static JsonGenerator createGenerator(Writer writer) {
+        return getProvider().createGenerator(writer);
+    }
+
+    /**
+     * This is usage instead of Json.createGeneratorFactory(null) to avoid re creation of Provider each time
+     *
+     * @param out i/o stream to which JSON is written
+     * @return a JSON generator
+     */
+    public static JsonGenerator createGenerator(OutputStream out) {
+        return getProvider().createGenerator(out);
+    }
+    /**
+     * This is usage instead of Json.createWriterFactory(null) to avoid re creation of WriterFactory each time
+     *
+     * @param writer to which JSON object or array is written
+     * @return a JSON writer
+     */
+    public static JsonWriter createWriter(Writer writer) {
+        return getJsonWriterFactory().createWriter(writer);
+    }
+
+    /**
+     * This is usage instead of Json.createWriterFactory(null) to avoid re creation of WriterFactory each time
+     *
+     * @param out to which JSON object or array is written
+     * @return a JSON writer
+     */
+    public static JsonWriter createWriter(OutputStream out) {
+        return getJsonWriterFactory().createWriter(out);
+    }
+
+    /**
+     * This is usage instead of Json.createReaderFactory(null) to avoid re creation of ReaderFactory each time
+     *
+     * @param reader a reader from which JSON is to be read
+     * @return a JSON reader
+     */
+    public static JsonReader createReader(Reader reader) {
+        return getJsonReaderFactory().createReader(reader);
+    }
+
+    /**
+     * This is usage instead of Json.createReaderFactory(null) to avoid re creation of ReaderFactory each time
+     *
+     * @param in a byte stream from which JSON is to be read
+     * @return a JSON reader
+     */
+    public static JsonReader createReader(InputStream in) {
+        return getJsonReaderFactory().createReader(in);
+    }
+
+
+    /**
+     * This is usage instead of Json.createArrayBuilder() to avoid re creation of JsonBuilderFactory each time
+     *
+     * @return a JSON array builder
+     */
+    public static JsonArrayBuilder createArrayBuilder() {
+        return getJsonBuilderFactory().createArrayBuilder();
+    }
+
+    /**
+     * This is usage instead of Json.createObjectBuilder() to avoid re creation of JsonBuilderFactory each time
+     *
+     * @return a JSON object builder
+     */
+    public static JsonObjectBuilder createObjectBuilder() {
+        return getJsonBuilderFactory().createObjectBuilder();
     }
 
     /**
@@ -292,7 +401,7 @@ public final class JsonObjects {
      * @return a {@link JsonObjectBuilder} initialised with the fields contained in the source
      */
     public static JsonObjectBuilder createObjectBuilderWithFilter(final JsonObject source, Function<String, Boolean> filter) {
-        JsonObjectBuilder builder = jsonBuilderFactory.createObjectBuilder();
+        JsonObjectBuilder builder = getJsonBuilderFactory().createObjectBuilder();
         source.entrySet().stream().filter(e -> filter.apply(e.getKey())).forEach(x -> builder.add(x.getKey(), x.getValue()));
         return builder;
     }
@@ -335,7 +444,7 @@ public final class JsonObjects {
      * @return a JsonArray with the converted entries
      */
     public static <T> JsonArray toJsonArray(final Collection<T> entries, final Function<T, JsonValue> converter) {
-        final JsonArrayBuilder arrayBuilder = jsonBuilderFactory.createArrayBuilder();
+        final JsonArrayBuilder arrayBuilder = getJsonBuilderFactory().createArrayBuilder();
         entries.forEach(entry -> arrayBuilder.add(converter.apply(entry)));
         return arrayBuilder.build();
     }
