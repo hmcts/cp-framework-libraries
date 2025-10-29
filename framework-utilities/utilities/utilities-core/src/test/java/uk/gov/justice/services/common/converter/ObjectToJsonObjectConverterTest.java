@@ -7,7 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import uk.gov.justice.services.common.converter.exception.ConverterException;
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
@@ -75,11 +75,11 @@ public class ObjectToJsonObjectConverterTest {
     }
 
     private JsonObject expectedJsonObject() {
-        final JsonArray array = jsonBuilderFactory.createArrayBuilder()
+        final JsonArray array = getJsonBuilderFactory().createArrayBuilder()
                 .add("Attribute 1")
                 .add("Attribute 2").build();
 
-        return jsonBuilderFactory.createObjectBuilder()
+        return getJsonBuilderFactory().createObjectBuilder()
                 .add("id", ID.toString())
                 .add("name", NAME)
                 .add("attributes", array).build();

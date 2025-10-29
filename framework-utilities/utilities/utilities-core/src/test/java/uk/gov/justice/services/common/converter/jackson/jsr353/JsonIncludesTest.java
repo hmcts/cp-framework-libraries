@@ -11,7 +11,7 @@ import static javax.json.JsonValue.TRUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.justice.services.common.converter.jackson.jsr353.JsonIncludes.includeField;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,26 +66,26 @@ public class JsonIncludesTest {
 
     @Test
     public void shouldNotIncludeEmptyArrayIfNonEmptyConfigured() {
-        assertThat(includeField(jsonBuilderFactory.createArrayBuilder().build(), NON_EMPTY), is(false));
+        assertThat(includeField(getJsonBuilderFactory().createArrayBuilder().build(), NON_EMPTY), is(false));
     }
 
     @Test
     public void shouldIncludeNonEmptyArrayIfNonEmptyConfigured() {
-        assertThat(includeField(jsonBuilderFactory.createArrayBuilder().add(TRUE).build(), NON_EMPTY), is(true));
+        assertThat(includeField(getJsonBuilderFactory().createArrayBuilder().add(TRUE).build(), NON_EMPTY), is(true));
     }
 
     @Test
     public void shouldNotIncludeEmptyStringIfNonEmptyConfigured() {
-        assertThat(includeField(jsonBuilderFactory.createObjectBuilder().add("test", "").build().getJsonString("test"), NON_EMPTY), is(false));
+        assertThat(includeField(getJsonBuilderFactory().createObjectBuilder().add("test", "").build().getJsonString("test"), NON_EMPTY), is(false));
     }
 
     @Test
     public void shouldIncludeNonEmptyStringIfNonEmptyConfigured() {
-        assertThat(includeField(jsonBuilderFactory.createObjectBuilder().add("test", "blah").build().getJsonString("test"), NON_EMPTY), is(true));
+        assertThat(includeField(getJsonBuilderFactory().createObjectBuilder().add("test", "blah").build().getJsonString("test"), NON_EMPTY), is(true));
     }
 
     @Test
     public void shouldIncludeNumberIfNonEmptyConfigured() {
-        assertThat(includeField(jsonBuilderFactory.createObjectBuilder().add("test", 0L).build().getJsonNumber("test"), NON_EMPTY), is(true));
+        assertThat(includeField(getJsonBuilderFactory().createObjectBuilder().add("test", 0L).build().getJsonNumber("test"), NON_EMPTY), is(true));
     }
 }

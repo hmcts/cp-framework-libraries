@@ -6,7 +6,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.UUID.randomUUID;
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.toSqlTimestamp;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonReaderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonReaderFactory;
 import static uk.gov.moj.cpp.jobstore.persistence.Priority.HIGH;
 
 import uk.gov.justice.services.test.utils.core.messaging.Poller;
@@ -125,7 +125,7 @@ public class OpenEjbJobJdbcRepository extends JobJdbcRepository {
     }
 
     private JsonObject jobData(final String json) {
-        try (JsonReader jsonReader = jsonReaderFactory.createReader(new StringReader(json))) {
+        try (JsonReader jsonReader = getJsonReaderFactory().createReader(new StringReader(json))) {
             return jsonReader.readObject();
         }
     }

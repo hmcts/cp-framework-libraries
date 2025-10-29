@@ -5,7 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Changed
-- Used JsonFactory instead of Json.create methods as per https://github.com/jakartaee/jsonp-api/issues/154
+- Refactor JsonObject usages to more proper api 
+- Fix HttpClient lifecycle.
+- Used JsonFactory instead of Json.create methods
 
 # [17.103.0] - 2025-07-16
 ### Changed

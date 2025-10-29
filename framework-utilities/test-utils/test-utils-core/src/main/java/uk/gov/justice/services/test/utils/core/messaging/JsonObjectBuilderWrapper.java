@@ -15,7 +15,7 @@ import static uk.gov.justice.services.test.utils.core.messaging.JsonObjects.json
 
 class JsonObjectBuilderWrapper {
 
-    private JsonObjectBuilder jsonObjectBuilder = jsonBuilderFactory.createObjectBuilder();
+    private final JsonObjectBuilder jsonObjectBuilder;
     private final Map<String, Object> entryMap = new HashMap<>();
 
     public JsonObjectBuilderWrapper(final JsonObject jsonObject) {

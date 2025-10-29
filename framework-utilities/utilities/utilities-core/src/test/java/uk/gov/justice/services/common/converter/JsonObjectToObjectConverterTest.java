@@ -8,7 +8,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.mockito.Mockito.doThrow;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
 
@@ -64,19 +64,19 @@ public class JsonObjectToObjectConverterTest {
     public void shouldConvertToPojoWithUTCDateTime() throws Exception {
 
         assertThat(jsonObjectToObjectConverter
-                        .convert(jsonBuilderFactory.createObjectBuilder().add("dateTime", "2016-07-25T13:09:01.0+00:00").build(),
+                        .convert(getJsonBuilderFactory().createObjectBuilder().add("dateTime", "2016-07-25T13:09:01.0+00:00").build(),
                                 PojoWithDateTime.class).getDateTime(),
                 equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
         assertThat(jsonObjectToObjectConverter
-                        .convert(jsonBuilderFactory.createObjectBuilder().add("dateTime", "2016-07-25T13:09:01.0Z").build(),
+                        .convert(getJsonBuilderFactory().createObjectBuilder().add("dateTime", "2016-07-25T13:09:01.0Z").build(),
                                 PojoWithDateTime.class).getDateTime(),
                 equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
         assertThat(jsonObjectToObjectConverter
-                        .convert(jsonBuilderFactory.createObjectBuilder().add("dateTime", "2016-07-25T13:09:01Z").build(),
+                        .convert(getJsonBuilderFactory().createObjectBuilder().add("dateTime", "2016-07-25T13:09:01Z").build(),
                                 PojoWithDateTime.class).getDateTime(),
                 equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
         assertThat(jsonObjectToObjectConverter
-                        .convert(jsonBuilderFactory.createObjectBuilder().add("dateTime", "2016-07-25T16:09:01.0+03:00").build(),
+                        .convert(getJsonBuilderFactory().createObjectBuilder().add("dateTime", "2016-07-25T16:09:01.0+03:00").build(),
                                 PojoWithDateTime.class).getDateTime(),
                 equalTo(ZonedDateTime.of(2016, 7, 25, 13, 9, 1, 0, ZoneId.of("UTC"))));
 
@@ -87,7 +87,7 @@ public class JsonObjectToObjectConverterTest {
 
         final UUID uuid = randomUUID();
 
-        final JsonObject jsonObject = jsonBuilderFactory.createObjectBuilder().add("id", uuid.toString()).build();
+        final JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder().add("id", uuid.toString()).build();
 
         doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(jsonObject);
 
@@ -103,7 +103,7 @@ public class JsonObjectToObjectConverterTest {
     public void shouldConvertJsonObjectToSingleArgumentConstructorPojo() throws Exception {
 
         final UUID id = randomUUID();
-        final JsonObject payloadAsJsonObject = jsonBuilderFactory.createObjectBuilder()
+        final JsonObject payloadAsJsonObject = getJsonBuilderFactory().createObjectBuilder()
                 .add("id", id.toString())
                 .build();
 
@@ -114,14 +114,14 @@ public class JsonObjectToObjectConverterTest {
     }
 
     private JsonObject jsonObject() {
-        final JsonArray array = jsonBuilderFactory.createArrayBuilder()
+        final JsonArray array = getJsonBuilderFactory().createArrayBuilder()
                 .add(ATTRIBUTE_1)
                 .add(ATTRIBUTE_2).build();
 
-        return jsonBuilderFactory.createObjectBuilder()
+        return getJsonBuilderFactory().createObjectBuilder()
                 .add("id", ID.toString())
                 .add("name", NAME)
-                .add("internalPojo", jsonBuilderFactory.createObjectBuilder()
+                .add("internalPojo", getJsonBuilderFactory().createObjectBuilder()
                         .add("internalId", INTERNAL_ID.toString())
                         .add("internalName", INTERNAL_NAME).build())
                 .add("attributes", array).build();
