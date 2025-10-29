@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import uk.gov.justice.services.common.converter.exception.ConverterException;
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
@@ -72,7 +72,7 @@ public class ObjectToJsonValueConverterTest {
         final JsonValue jsonValue = objectToJsonValueConverter.convert(pojo);
 
         assertThat(jsonValue, equalTo(
-                jsonBuilderFactory.createObjectBuilder()
+                getJsonBuilderFactory().createObjectBuilder()
                         .add("dateTime", DATE_TIME)
                         .build()));
     }
@@ -124,11 +124,11 @@ public class ObjectToJsonValueConverterTest {
     }
 
     private JsonValue expectedJsonValue() {
-        final JsonArray array = jsonBuilderFactory.createArrayBuilder()
+        final JsonArray array = getJsonBuilderFactory().createArrayBuilder()
                 .add("Attribute 1")
                 .add("Attribute 2").build();
 
-        return jsonBuilderFactory.createObjectBuilder()
+        return getJsonBuilderFactory().createObjectBuilder()
                 .add("id", ID.toString())
                 .add("name", NAME)
                 .add("boolFlag", BOOL_FLAG)
@@ -137,7 +137,7 @@ public class ObjectToJsonValueConverterTest {
     }
 
     private JsonValue expectedJsonArray() {
-        return jsonBuilderFactory.createArrayBuilder()
+        return getJsonBuilderFactory().createArrayBuilder()
                 .add(ATTRIBUTE_1)
                 .add(ATTRIBUTE_2).build();
     }

@@ -4,7 +4,7 @@ import static java.util.Optional.empty;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 import static uk.gov.moj.cpp.jobstore.persistence.Priority.HIGH;
 
 import uk.gov.justice.services.common.util.UtcClock;
@@ -24,7 +24,7 @@ public class JobTest {
 
     @BeforeEach
     public void setup() {
-        jobData = jsonBuilderFactory.createObjectBuilder().build();
+        jobData = getJsonBuilderFactory().createObjectBuilder().build();
         nextTaskStartTime = new UtcClock().now();
     }
 

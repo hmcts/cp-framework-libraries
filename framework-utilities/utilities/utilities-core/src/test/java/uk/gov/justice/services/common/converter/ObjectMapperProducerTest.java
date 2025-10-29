@@ -13,7 +13,7 @@ import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.
 import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.Colour.BLUE;
 import static uk.gov.justice.services.common.converter.ObjectMapperProducerTest.Colour.RED;
 import static uk.gov.justice.services.common.converter.ZonedDateTimes.ISO_8601;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
 
@@ -74,7 +74,7 @@ public class ObjectMapperProducerTest {
 
     @Test
     public void shouldOmitsNullValuesFromJsonObjects() throws Exception {
-        final JsonObject source = jsonBuilderFactory.createObjectBuilder()
+        final JsonObject source = getJsonBuilderFactory().createObjectBuilder()
                 .add("id", "861c9430-7bc6-4bf0-b549-6534394b8d65")
                 .add("name", JsonValue.NULL)
                 .build();

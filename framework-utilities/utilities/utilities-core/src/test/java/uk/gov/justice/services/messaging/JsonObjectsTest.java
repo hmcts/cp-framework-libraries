@@ -10,8 +10,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static uk.gov.justice.services.messaging.JsonObjects.*;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +36,8 @@ public class JsonObjectsTest {
     private static final String UUID_A = "da45e8f6-d945-4f09-a115-1139a9dbb754";
     private static final String UUID_B = "d04885b4-9652-4c2a-87c6-299bda0a87d4";
 
+    private static final javax.json.JsonBuilderFactory jsonBuilderFactory = JsonObjects.getJsonBuilderFactory();
+    private static final javax.json.JsonReaderFactory jsonReaderFactory = JsonObjects.getJsonReaderFactory();
 
     @Test
     public void shouldReturnJsonArray() {
@@ -365,4 +367,176 @@ public class JsonObjectsTest {
         assertTrue(jsonReaderFactory.getConfigInUse().isEmpty());
     }
 
+    @Test
+    public void shouldGetJsonReaderFactoryAndCacheIt() {
+        // when
+        final javax.json.JsonReaderFactory first = JsonObjects.getJsonReaderFactory();
+        final javax.json.JsonReaderFactory second = JsonObjects.getJsonReaderFactory();
+
+        // then
+        assertNotNull(first);
+        assertTrue(first.getConfigInUse().isEmpty());
+        assertSame(first, second, "JsonReaderFactory should be a cached singleton instance");
+    }
+
+    @Test
+    public void shouldGetJsonWriterFactoryAndCacheIt() {
+        // when
+        final javax.json.JsonWriterFactory first = JsonObjects.getJsonWriterFactory();
+        final javax.json.JsonWriterFactory second = JsonObjects.getJsonWriterFactory();
+
+        // then
+        assertNotNull(first);
+        assertTrue(first.getConfigInUse().isEmpty());
+        assertSame(first, second, "JsonWriterFactory should be a cached singleton instance");
+    }
+
+    @Test
+    public void shouldGetJsonBuilderFactoryAndCacheIt() {
+        // when
+        final javax.json.JsonBuilderFactory first = JsonObjects.getJsonBuilderFactory();
+        final javax.json.JsonBuilderFactory second = JsonObjects.getJsonBuilderFactory();
+
+        // then
+        assertNotNull(first);
+        assertTrue(first.getConfigInUse().isEmpty());
+        assertSame(first, second, "JsonBuilderFactory should be a cached singleton instance");
+    }
+
+    @Test
+    public void shouldGetProviderAndCacheIt() {
+        // when
+        final javax.json.spi.JsonProvider first = JsonObjects.getProvider();
+        final javax.json.spi.JsonProvider second = JsonObjects.getProvider();
+
+        // then
+        assertNotNull(first);
+        assertSame(first, second, "JsonProvider should be a cached singleton instance");
+    }
+
+    @Test
+    public void shouldCreateParserFromReader() {
+        // given
+        final String json = "{\"a\":1}";
+
+        // when
+        final javax.json.stream.JsonParser parser = JsonObjects.createParser(new java.io.StringReader(json));
+        boolean sawKey = false;
+        boolean sawValue = false;
+        while (parser.hasNext()) {
+            final javax.json.stream.JsonParser.Event event = parser.next();
+            if (event == javax.json.stream.JsonParser.Event.KEY_NAME) {
+                sawKey = true;
+            }
+            if (event == javax.json.stream.JsonParser.Event.VALUE_NUMBER) {
+                sawValue = true;
+            }
+        }
+
+        // then
+        assertTrue(sawKey, "Parser should see a KEY_NAME event");
+        assertTrue(sawValue, "Parser should see a VALUE_NUMBER event");
+    }
+
+    @Test
+    public void shouldCreateParserFromInputStream() {
+        // given
+        final String json = "{\"b\":2}";
+        final java.io.InputStream in = new java.io.ByteArrayInputStream(json.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        // when
+        final javax.json.stream.JsonParser parser = JsonObjects.createParser(in);
+        boolean sawKey = false;
+        boolean sawValue = false;
+        while (parser.hasNext()) {
+            final javax.json.stream.JsonParser.Event event = parser.next();
+            if (event == javax.json.stream.JsonParser.Event.KEY_NAME) {
+                sawKey = true;
+            }
+            if (event == javax.json.stream.JsonParser.Event.VALUE_NUMBER) {
+                sawValue = true;
+            }
+        }
+
+        // then
+        assertTrue(sawKey, "Parser should see a KEY_NAME event");
+        assertTrue(sawValue, "Parser should see a VALUE_NUMBER event");
+    }
+
+    @Test
+    public void shouldCreateGeneratorToWriter() {
+        // given
+        final java.io.StringWriter writer = new java.io.StringWriter();
+
+        // when
+        final javax.json.stream.JsonGenerator generator = JsonObjects.createGenerator(writer);
+        generator.writeStartObject().write("a", 1).writeEnd();
+        generator.close();
+
+        // then
+        final String json = writer.toString();
+        final javax.json.JsonObject obj = JsonObjects.createReader(new java.io.StringReader(json)).readObject();
+        assertThat(obj.getInt("a"), equalTo(1));
+    }
+
+    @Test
+    public void shouldCreateGeneratorToOutputStream() {
+        // given
+        final java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+
+        // when
+        final javax.json.stream.JsonGenerator generator = JsonObjects.createGenerator(out);
+        generator.writeStartObject().write("b", 2).writeEnd();
+        generator.close();
+
+        // then
+        final String json = new String(out.toByteArray(), java.nio.charset.StandardCharsets.UTF_8);
+        final javax.json.JsonObject obj = JsonObjects.createReader(new java.io.StringReader(json)).readObject();
+        assertThat(obj.getInt("b"), equalTo(2));
+    }
+
+    @Test
+    public void shouldCreateWriterAndReaderUsingWriter() {
+        // given
+        final javax.json.JsonObject source = JsonObjects.createObjectBuilder().add("x", "y").build();
+
+        // when
+        final java.io.StringWriter stringWriter = new java.io.StringWriter();
+        try (final javax.json.JsonWriter jsonWriter = JsonObjects.createWriter(stringWriter)) {
+            jsonWriter.write(source);
+        }
+
+        // then
+        final String json = stringWriter.toString();
+        final javax.json.JsonObject readBack = JsonObjects.createReader(new java.io.StringReader(json)).readObject();
+        assertThat(readBack.getString("x"), equalTo("y"));
+    }
+
+    @Test
+    public void shouldCreateWriterAndReaderUsingOutputStream() {
+        // given
+        final javax.json.JsonObject source = JsonObjects.createObjectBuilder().add("p", true).build();
+
+        // when
+        final java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        try (final javax.json.JsonWriter jsonWriter = JsonObjects.createWriter(out)) {
+            jsonWriter.write(source);
+        }
+
+        // then
+        final byte[] bytes = out.toByteArray();
+        final javax.json.JsonObject readBack = JsonObjects.createReader(new java.io.ByteArrayInputStream(bytes)).readObject();
+        assertThat(readBack.getBoolean("p"), is(true));
+    }
+
+    @Test
+    public void shouldCreateArrayBuilder() {
+        // when
+        final javax.json.JsonArray array = JsonObjects.createArrayBuilder().add("v1").add("v2").build();
+
+        // then
+        assertThat(array.size(), equalTo(2));
+        assertThat(array.getString(0), equalTo("v1"));
+        assertThat(array.getString(1), equalTo("v2"));
+    }
 }

@@ -8,7 +8,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
-import static uk.gov.justice.services.messaging.JsonObjects.jsonBuilderFactory;
+import static uk.gov.justice.services.messaging.JsonObjects.getJsonBuilderFactory;
 
 import uk.gov.justice.services.common.converter.exception.ConverterException;
 import uk.gov.justice.services.common.converter.jackson.ObjectMapperProducer;
@@ -78,9 +78,9 @@ public class ListToJsonArrayConverterTest {
     }
 
     private JsonArray expectedJsonArray() {
-        return jsonBuilderFactory.createArrayBuilder()
-                .add(jsonBuilderFactory.createObjectBuilder().add("id", ID_ONE.toString()).add("name", NAME_ONE))
-                .add(jsonBuilderFactory.createObjectBuilder().add("id", ID_TWO.toString()).add("name", NAME_TWO))
+        return getJsonBuilderFactory().createArrayBuilder()
+                .add(getJsonBuilderFactory().createObjectBuilder().add("id", ID_ONE.toString()).add("name", NAME_ONE))
+                .add(getJsonBuilderFactory().createObjectBuilder().add("id", ID_TWO.toString()).add("name", NAME_TWO))
                 .build();
     }
 
