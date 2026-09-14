@@ -31,6 +31,7 @@
         <module>jsonschema-pojo-generator</module>
         <module>raml-maven</module>
         <module>framework-datasources</module>
+        <module>liquibase-postgres-compatibility</module>
         <module>framework-libraries-version</module>
     </modules>
 
