@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file, which loose
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [25.104.2] - 2026-09-14
+### Added
+- New `liquibase-postgres-compatibility` module, restoring Liquibase 4's handling of the MySQL-only `afterColumn` hint on databases that have no column ordering.
+
+  Liquibase 4 guarded the hint with `database instanceof MySQLDatabase` in `AddColumnChange.generateStatements` and discarded it everywhere else. Liquibase 5.0.3 dropped that guard and sets `addAfterColumn` unconditionally, so on PostgreSQL `AddColumnGenerator.validate` aborts the whole migration with *"addAfterColumn is not allowed on postgresql"* and nothing is applied. Suppressing only the validation would be worse — `AddColumnGenerator.generateSql` appends `AFTER <column>` with no database check, producing invalid PostgreSQL.
+
+  `ColumnOrderingAgnosticAddColumnChange` clears the field on the generated statement instead, so there is nothing left to reject and nothing left to render. It is registered through `META-INF/services/liquibase.change.Change` at `PRIORITY_DEFAULT + 1`, so `ChangeFactory` selects it ahead of the built-in `addColumn` while inheriting all of its behaviour.
+
+  Existing changesets are untouched, so DATABASECHANGELOG checksums are unchanged and databases that have already run them stay valid. Consumed by the `liquibase-jar` profile in `cpp-platform-maven-parent-pom`, which shades it into each context's Liquibase jar.
+
 ## [25.104.1] - 2026-09-11
 ### Changed
 - Updated the parent `maven-framework-parent-pom` to 25.104.1 to take the changes from it
