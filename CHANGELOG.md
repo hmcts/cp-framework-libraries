@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file, which loose
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [25.104.3] - 2026-09-14
+### Changed
+- Added `liquibase-postgres-compatibility` to `framework-libraries-bom`. It was released in 25.104.2 without a BOM entry, which forced consumers to pin its version themselves — duplicating version management and tying their release cadence to this project's. Consumers should now declare it with no `<version>`.
+
 ## [25.104.2] - 2026-09-14
 ### Added
 - New `liquibase-postgres-compatibility` module, restoring Liquibase 4's handling of the MySQL-only `afterColumn` hint on databases that have no column ordering.
