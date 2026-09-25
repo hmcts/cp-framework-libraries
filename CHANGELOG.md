@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file, which loose
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+## [25.104.4] - 2026-09-25
+### Changed
+- Updated the parent `maven-framework-parent-pom`, `maven-common-bom`, `cp-file-service` and `cp-wiremock-service` to
+  25.104.2, which carry the September 2026 security updates: postgresql 42.7.13, micrometer 1.16.7, log4j 2.25.5,
+  plexus-utils 3.6.2
+
 ## [25.104.3] - 2026-09-14
 ### Changed
 - Added `liquibase-postgres-compatibility` to `framework-libraries-bom`. It was released in 25.104.2 without a BOM entry, which forced consumers to pin its version themselves — duplicating version management and tying their release cadence to this project's. Consumers should now declare it with no `<version>`.
