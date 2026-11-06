@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [25.104.6] - 2026-11-05
+### Changed
+- Updated the parent `maven-framework-parent-pom`, `maven-common-bom`, `cp-file-service` and `cp-wiremock-service` to
+  25.104.4, which move Hibernate ORM from 6.6.1.Final to 7.3.2.Final, the version WildFly 40.0.1 ships
+- `test-utils-hibernate` now depends on `hibernate-scan-jandex`. Hibernate 7 moved entity scanning into it, so without
+  it a test persistence unit's `<jar-file>` finds no entities and every repository test fails with "Unknown entity type"
+
 ## [25.104.5] - 2026-10-27
 ### Security
 - Updated the parent `maven-framework-parent-pom`, `maven-common-bom`, `cp-file-service` and `cp-wiremock-service` to

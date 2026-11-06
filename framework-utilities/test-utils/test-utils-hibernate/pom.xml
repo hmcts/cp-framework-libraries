@@ -27,6 +27,11 @@
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
         </dependency>
+        <!-- Without it, Hibernate 7 finds no entities through a persistence unit's jar-file -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-scan-jandex</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
